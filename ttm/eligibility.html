@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TTM Protocol – Eligibility</title>
+
+  <style>
+    :root{
+      --bg: #f8f9fb;
+      --text: #222;
+      --muted: #555;
+      --card: #ffffff;
+      --border: #e1e4e8;
+      --shadow: rgba(0,0,0,0.06);
+      --warning-bg: #fff3cd;
+      --warning-border: #ffc107;
+      --danger-bg: #fdecea;
+      --danger-border: #f5c2c7;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+     /* Sticky header (shared across pages) */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .menu { position: relative; }
+
+    .menu-dropdown{
+      display: none;           
+      position: absolute;
+      right: 0;
+      top: 42px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      min-width: 240px;
+      z-index: 999;
+    }
+
+    .menu-dropdown a{
+      display: block;          
+      padding: 10px 14px;
+      text-decoration: none;
+      color: var(--text);
+      border: 0;               
+      background: transparent; 
+      border-radius: 0;
+    }
+
+    .menu-dropdown a:hover{
+      background: #f3f4f6;
+    }
+
+    .menu-button {
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .menu-button:hover {
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav a {
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .nav a:hover {
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 0 0 6px;
+    }
+
+    .page-desc {
+      color: var(--muted);
+      margin: 0 0 16px;
+      font-size: 14px;
+    }
+
+    .notice {
+      background-color: var(--warning-bg);
+      border-left: 4px solid var(--warning-border);
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 10px var(--shadow);
+      margin-top: 14px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 15px;
+      margin: 16px 0 8px;
+    }
+
+    ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: #fff;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .danger-box {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger-border);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 36px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    /* Small screen tweaks */
+    @media (max-width: 520px) {
+      .brand-subtitle { display: none; }
+      .nav a { padding: 8px 9px; }
+    }
+  </style>
+</head>
+
+<body>
+<!-- Shared Sticky Header -->
+<div class="header">
+  <div class="header-inner">
+
+    <div class="brand">
+      <p class="brand-title">TTM Protocol</p>
+    </div>
+
+    <div class="nav">
+      <div class="menu">
+       <button class="menu-button" type="button" onclick="toggleMenu(event)">☰ Sections</button>
+        <div class="menu-dropdown" id="menuDropdown">
+          <a href="index.html">Context</a>
+          <a href="eligibility.html">1. Eligibility</a>
+          <a href="target-temperature.html">2. Target Temperature</a>
+          <a href="induction.html">3. Induction</a>
+          <a href="maintenance.html">4. Maintenance</a>
+          <a href="rewarming.html">5. Rewarming</a>
+          <a href="monitoring.html">6. Monitoring & Prognostication</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="container">
+    <h1>1. Eligibility</h1>
+
+<!-- Inclusion -->
+<div class="card" id="inclusion">
+  <h2>Inclusion Criteria </h2>
+
+  <p class="muted">
+    Targeted temperature management may be considered in patients who meet
+  </p>
+
+  <ul>
+    <li>
+      Age ≥ 18 years
+    </li>
+
+    <li>
+      More than 20 consecutive minutes of ROSC
+    </li>
+
+    <li>
+      Glasgow Coma Scale (GCS) &lt; 13 and lack of meaningful response to verbal commands after sustained ROSC
+    </li>
+  </ul>
+</div>
+
+
+    <!-- Exclusion -->
+    <div class="card" id="exclusion">
+      <h2>Exclusion Criteria </h2>
+
+      <ul>
+        <li>Obvious or suspected pregnancy</li>
+
+        <li>
+          Active bleeding, platelet count &lt; 70,000/µL,
+          aPTT &gt; 40 sec, INR &gt; 1.5, or known coagulopathy
+        </li>
+
+        <li>Major operation within 7 days</li>
+
+        <li>Life-threatening infection, such as severe sepsis</li>
+
+        <li>
+          Persistent hypotension:
+          systolic blood pressure &lt; 80 mmHg despite adequate
+          fluid resuscitation, vasopressor/inotropic support, or ECMO
+        </li>
+
+        <li>
+          Baseline body temperature &lt; 30℃ before initiation of hypothermia
+        </li>
+      </ul>
+    </div>
+
+    <footer>
+      Protocol version: <strong>2022-11-03</strong>
+    </footer>
+  </div>
+
+  <script>
+  function toggleMenu(e) {
+    if (e) e.stopPropagation(); 
+
+    const menu = document.getElementById("menuDropdown");
+    if (!menu) return;
+
+    const isOpen = menu.style.display === "block";
+    menu.style.display = isOpen ? "none" : "block";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const menu = document.getElementById("menuDropdown");
+    if (menu) menu.addEventListener("click", (e) => e.stopPropagation());
+  });
+
+  document.addEventListener("click", () => {
+    const menu = document.getElementById("menuDropdown");
+    if (menu) menu.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
