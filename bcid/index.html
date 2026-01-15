@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>BCID2 Antibiotic Suggestion (Mobile)</title>
+  <title>BCID2 Antibiotic Suggestion</title>
   <style>
     :root{
       --bg:#0b1220;
@@ -216,7 +216,7 @@
 <header>
   <div class="wrap">
     <h1>BCID2 Antibiotic Suggestion</h1>
-    <div class="sub">두둥 두둥!!!</div>
+    <div class="sub">test version</div>
     <div class="row" style="margin-top:10px">
       <span class="pill">Organisms: <b id="selOrg">0</b></span>
       <span class="pill">Genes: <b id="selGene">0</b></span>
@@ -246,7 +246,7 @@
     <button class="acc-head" data-acc="gene">
       <div class="acc-left">
         <div class="acc-title">2. Resistance genes</div>
-        <div class="acc-subsel"><span class="dot"></span>Tap to select</div>
+        <div class="acc-subsel" id="selectedGenesText"><span class="dot"></span>Tap to select</div>
       </div>
       <div class="acc-right"><span class="chev" id="chevGene">▼</span></div>
     </button>
@@ -280,7 +280,7 @@
       <div class="divider"></div>
       <div class="results" id="resultsBox"></div>
       <div class="divider"></div>
-      <div class="meta"><b>주의</b>: BCID2는 AST가 아닙니다. 최종 동정/감수성 결과 및 임상상황을 함께 고려하세요.</div>
+      <div class="meta"> BCID2는 AST가 아닙니다. 최종 동정/감수성 결과 및 임상상황을 함께 고려하세요.</div>
       <div class="btnrow">
         <button class="btn" id="btnResetEnd">Reset</button>
         <button class="btn primary" id="btnCopy">Copy Results</button>
@@ -348,6 +348,8 @@
   const selOrg = document.getElementById("selOrg");
   const selGene = document.getElementById("selGene");
   const subselOrg = document.getElementById("subselOrg");
+  const subselGene = document.getElementById("selectedGenesText");
+
 
   const categoryPanels = document.getElementById("categoryPanels");
   const geneBox = document.getElementById("geneBox");
@@ -413,7 +415,16 @@
     elSub.innerHTML = `<span class="dot"></span>${escapeHTML(preview.join(" · "))}${escapeHTML(more)}`;
   }
 
-  function getSelectedOrganisms(){ return ORGANISMS.filter(o => state.organisms.has(o.id)); }
+  function setGeneSubSelection(elSub, names){
+    if(!elSub) return;
+    if(!names.length){ elSub.innerHTML = `<span class="dot"></span>Tap to select`; return; }
+    const preview = names.slice(0, 4);
+    const more = names.length > 4 ? ` +${names.length - 4}` : "";
+    elSub.innerHTML = `<span class="dot"></span>${escapeHTML(preview.join(" · "))}${escapeHTML(more)}`;
+  }
+
+
+function getSelectedOrganisms(){ return ORGANISMS.filter(o => state.organisms.has(o.id)); }
   function getSelectedGeneNames(){ return Array.from(state.genes).map(id => GENES.find(g=>g.id===id)?.name).filter(Boolean); }
 
   let openCat = "gp";
@@ -459,6 +470,7 @@
       panelResults.classList.add("hidden");
       renderGenes();      // make selection styling update immediately
       updateTopSummary(); // update counts only
+      setGeneSubSelection(subselGene, getSelectedGeneNames());
     });
   }
 
@@ -500,13 +512,14 @@
     updateTopSummary();
   }
 
-  function updateTopSummary(){
-    const orgs = getSelectedOrganisms();
-    const genes = getSelectedGeneNames();
-    selOrg.textContent = String(orgs.length);
-    selGene.textContent = String(genes.length);
-    setSubSelection(subselOrg, orgs.map(o=>o.name));
-  }
+function updateTopSummary(){
+  const orgs = getSelectedOrganisms();
+  const genes = getSelectedGeneNames();
+  selOrg.textContent = String(orgs.length);
+  selGene.textContent = String(genes.length);
+  setSubSelection(subselOrg, orgs.map(o=>o.name));
+  setGeneSubSelection(subselGene, genes);
+}
 
   function resolveForOrganism(org, genes){
     if(org.group === "Enterobacterales" && genes.size === 0){
